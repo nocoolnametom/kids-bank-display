@@ -1,0 +1,178 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kids Accounts</title>
+    <style>
+      body {
+          position: relative;
+          color: black;
+          margin: 0;
+          font-size: 15px;
+          font-family: sans-serif;
+          font-weight: bold;
+          transform: rotate(180deg);
+      }
+      .regular {
+        font-size: 17px;
+      }
+      .x-small {
+        font-size: 12px;
+      }
+      .xx-small {
+        font-size: 11px;
+      }
+      .kids {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+      }
+      .now {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          background: white;
+          padding: 0.1em 0 0 0.1em;
+          border-style: solid;
+          border-color: black;
+          border-width: 1px 0 0 1px;
+          z-index: 100;
+      }
+      .kid:first-child {
+          border-left: 0;
+          padding-right: 0.25em;
+      }
+      .kid:last-child {
+        padding-left: 0.25em;
+      }
+      .kid:only-child {
+        max-width: 100%;
+      }
+      .kid {
+          border-left: 1px dashed black;
+          flex: 1;
+          max-width: 50%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 0.75fr 2fr 0.75fr;
+          grid-template-areas:
+              "name fullTotal"
+              "accounts accounts"
+              "recent recent";
+      }
+      .name {
+          max-width: 23vw;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          grid-area: name;
+          align-self: center;
+          justify-self: left;
+      }
+      .fullTotal {
+          grid-area: fullTotal;
+          align-self: center;
+          justify-self: right;
+      }
+      .accounts {
+          border-top-style: solid;
+          border-bottom-style: dotted;
+          border-color: black;
+          border-width: 3px 0 1px;
+          height: 100%;
+          grid-area: accounts;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-self: center;
+      }
+      .account {
+          min-width: 0;
+          flex: 1 1 50%;
+          text-align: center;
+          align-self: center;
+          justify-content: center;
+      }
+      .account .type {
+          max-width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+      .total:before, .fullTotal:before {
+          content: "$";
+          font-size: 11px;
+          vertical-align: top;
+      }
+      .fullTotal {
+          text-align: center;
+          font-weight: bolder;
+      }
+      .total {
+          font-weight: bolder;
+      }
+      .recent_transaction {
+          padding-top: 0.25em;
+          grid-area: recent;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          grid-template-areas:
+              "date amount"
+              "memo memo";
+      }
+      .recent_transaction .date {
+          grid-area: date;
+          align-self: center;
+          justify-self: left;
+      }
+      .recent_transaction .amount {
+          grid-area: amount;
+          align-self: center;
+          justify-self: right;
+      }
+      .recent_transaction .amount::before {
+        content: "$";
+          font-size: xx-small;
+          vertical-align: top;
+      }
+      .recent_transaction .memo {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          grid-area: memo;
+          align-self: center;
+          justify-self: left;
+          max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="kids">
+      <% kids.forEach(kid => { %>
+        <div class="kid">
+          <div class="name regular"><%= kid.name %></div>
+          <div class="fullTotal regular"><%= kid.fullTotal.toFixed(2) %></div>
+          <div class="accounts">
+            <% kid.accounts.forEach(account => { %>
+              <div class="account">
+                <div class="type x-small"><%= account.name %></div>
+                <div class="total"><%= account.credit.toFixed(2) %></div>
+              </div>
+            <% }) %>
+          </div>
+          <% if (kid.recentTransaction) { %>
+            <div class="recent_transaction x-small">
+              <div class="date"><%= kid.recentTransaction.date %></div>
+              <div class="amount"><%= kid.recentTransaction.amount.toFixed(2) %></div>
+              <div class="memo"><%= kid.recentTransaction.name %></div>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+    <div class="now xx-small"><%= now %></div>
+  </body>
+</html>

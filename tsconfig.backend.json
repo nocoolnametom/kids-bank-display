@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2017",
+    "lib": ["ES2017", "dom"],
+    "module": "CommonJS",
+    "rootDir": "./src/backend",
+    "outDir": "./dest/backend"
+  },
+  "exclude": [
+    "./src/imaging",
+    "./src/frontend",
+    "./src/lookup"
+  ]
+}

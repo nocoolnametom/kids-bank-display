@@ -1,0 +1,1 @@
+../../backend/interfaces/KidsAccountsJson.ts

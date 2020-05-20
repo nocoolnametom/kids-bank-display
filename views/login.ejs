@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Plaid Login</title>
+    <link rel="stylesheet" href="https://threads.plaid.com/threads.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <script id="frontendConfig" type="text/json"><%- frontendConfig %></script>
+    <div id="main">Loading...</div>
+
+    <script src="/scripts/require.js"></script>
+    <script type="text/javascript">
+      require.config({
+        paths: {
+          "jquery": "/scripts/jquery",
+          "react": "/scripts/react",
+          "react-dom": "/scripts/react-dom",
+          "tslib": "/scripts/tslib",
+          "react-plaid-link": "/scripts/react-plaid-link",
+          "index": "/js/index",
+        },
+      });
+
+      require(['index'], function(app) {
+        try {
+          const frontendConfig = JSON.parse(document.getElementById('frontendConfig').innerText);
+          app.execute(frontendConfig);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    </script>
+  </body>
+</html>

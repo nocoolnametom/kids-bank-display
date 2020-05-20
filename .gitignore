@@ -1,0 +1,23 @@
+# Installed modules
+node_modules
+
+# Built JS Files
+dest
+
+# Built Image Files
+/*.png
+
+# Account Value Lookup Data
+/*.db
+
+# JSON Files
+/*.json
+!/package.json
+!/package-lock.json
+!/tsconfig*.json
+
+# Dotfiles
+/.*
+!/.envrc
+!/.gitignore
+!/.prettierrc
