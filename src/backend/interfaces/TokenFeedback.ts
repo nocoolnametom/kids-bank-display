@@ -1,4 +1,4 @@
 export interface TokenFeedback {
   kid: string;
-  token: string;
+  token?: string | null;
 }

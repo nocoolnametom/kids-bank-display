@@ -9,12 +9,12 @@ const PLAID_CLIENT_ID = envvar.string("PLAID_CLIENT_ID");
 const PLAID_SECRET = envvar.string("PLAID_SECRET");
 const PLAID_PUBLIC_KEY = envvar.string("PLAID_PUBLIC_KEY");
 const PLAID_ENV = envvar.string("PLAID_ENV", "sandbox");
-const IS_NIXOS = envvar.number("__NIXOS_SET_ENVIRONMENT_DONE", 0);
-const CHROMIUM = envvar.string("CHROMIUM", "./.node/bin/chromium");
+const IS_NIXOS = !(!envvar.number("__NIXOS_SET_ENVIRONMENT_DONE", 0));
+const CHROMIUM = envvar.string("CHROMIUM", IS_NIXOS ? `${__dirname}/../../.node/bin/chromium` : "/usr/bin/chromium-browser");
 const FZ_FAM = envvar.string("FZ_FAM", "doggett");
 const FZ_MEM = envvar.string("FZ_MEM", "tom");
 const FZ_PASS = envvar.string("FZ_PASS", "<famzooPassword>");
-const TOKEN_DB_NAME = envvar.string("TOKEN_DB_NAME", "kid_tokens.db");
+const TOKEN_DB_NAME = envvar.string("TOKEN_DB_NAME", `${__dirname}/../../kid_tokens.db`);
 
 const APP_NAME = 'RP0-BankBox';
 

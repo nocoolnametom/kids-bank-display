@@ -1,0 +1,14 @@
+export APP_POST=8080
+export CHROMIUM=
+export DASHBOARD_URL=http://localhost:8080/
+export FZ_FAM=lastname
+export FZ_MEM=firstname
+export FZ_PASS=famzoopass
+export IMAGE_OUTPUT=/tmp/rp0-bankbox.png
+export PLAID_CLIENT_ID=yourplaidclientid
+export PLAID_COUNTRY_CODES=US
+export PLAID_ENV=sandbox
+export PLAID_PRODUCTS=transactions
+export PLAID_PUBLIC_KEY=yourplaidpublickey
+export PLAID_SECRET=yourplaidsecret
+export TOKEN_DB_NAME=kid_tokens.db

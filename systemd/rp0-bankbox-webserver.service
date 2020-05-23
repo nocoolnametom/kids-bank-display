@@ -1,0 +1,16 @@
+[Unit]
+Description=Web Server for RP0-BankBox
+# When systemd stops or restarts the app.service, the action is propagated to this unit
+PartOf=rp0-bankbox.service
+# Start this unit after the app.service start
+After=rp0-bankbox.service
+
+[Service]
+EnvironmentFile=/opt/rp0-bankbox/environment
+ExecStart=/usr/local/bin/node /opt/rp0-bankbox/dest/backend/index.js
+# Restart the service on non-zero exit code when terminated by a signal other than SIGHUP, SIGINT, SIGTERM or SIGPIPE
+Restart=on-failure
+
+[Install]
+# This unit should start when rp0-bankbox.service is starting
+WantedBy=rp0-bankbox.service

@@ -6,8 +6,8 @@
   "scripts": {
     "debug": "DEBUG=express:* npm start",
     "build": "rm -Rf dest && tsc -b tsconfig.frontend.json && tsc -b tsconfig.backend.json && tsc -b tsconfig.lookup.json && tsc -b tsconfig.imaging.json",
-    "start": "npm run build && PLAID_CLIENT_ID=5e1a5e101d60bb0016ca15cc PLAID_SECRET=0ccb4f1201bb5cd07fd2fc8ea0565d PLAID_PUBLIC_KEY=ca34dded4622c613a5266a8aeea975 ts-node src/backend/index.ts",
-    "lookup": "PLAID_CLIENT_ID=5e1a5e101d60bb0016ca15cc PLAID_SECRET=0ccb4f1201bb5cd07fd2fc8ea0565d PLAID_PUBLIC_KEY=ca34dded4622c613a5266a8aeea975 ts-node src/lookup/index.ts",
+    "start": "npm run build && . ./environment && ts-node src/backend/index.ts",
+    "lookup": ". ./environment && ts-node src/lookup/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nocoolnametom@gmail.com",

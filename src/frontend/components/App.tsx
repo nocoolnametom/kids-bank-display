@@ -25,22 +25,34 @@ export class App extends React.Component<IProps, IState> {
     this.onNewKid = this.onNewKid.bind(this);
     this.submitNewToken = this.submitNewToken.bind(this);
     this.getTokenFromState = this.getTokenFromState.bind(this);
+    this.clearKid = this.clearKid.bind(this);
   }
 
   async submitNewToken(): Promise<void> {
     const { kid } = this.state;
     const token = this.getTokenFromState(kid);
-    if (token) {
-      try {
-        await fetch(this.props.config.pushUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ kid, token } as TokenFeedback),
-        });
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      await fetch(this.props.config.pushUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kid, token } as TokenFeedback),
+      });
+    } catch (err) {
+      console.error(err);
     }
+  }
+
+  clearKid(kid: string): void {
+    this.setState(
+      (state) => ({
+        ...state,
+        accounts: state.accounts.map((account) => ({
+          ...account,
+          publicToken: account.kid === kid ? undefined : account.publicToken,
+        })),
+      }),
+      this.submitNewToken
+    );
   }
 
   onPlaidSuccess(token: string): void {
@@ -76,23 +88,45 @@ export class App extends React.Component<IProps, IState> {
     const { kid } = this.state;
     const token = this.getTokenFromState(kid);
     return (
-      <>
-        <KidSelector
-          value={kid}
-          kids={accounts.map(({ kid }) => kid)}
-          onChange={this.onNewKid}
-        />
-        {kid ? (
-          <PlaidLink
-            onSuccess={this.onPlaidSuccess}
-            env={env}
-            product={products}
-            publicKey={publicKey}
-            countryCodes={countryCodes}
-            publicToken={token}
-          />
-        ) : null}
-      </>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              Select Child
+            </th>
+            {kid ? <th>Click to connect</th> : null}
+            {kid && token ? <th>Clear Bank Connection</th> : null}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <KidSelector
+                value={kid}
+                kids={accounts.map(({ kid }) => kid)}
+                onChange={this.onNewKid}
+              />
+            </td>
+            {kid ? (
+              <td>
+                <PlaidLink
+                  onSuccess={this.onPlaidSuccess}
+                  env={env}
+                  product={products}
+                  publicKey={publicKey}
+                  countryCodes={countryCodes}
+                  publicToken={token}
+                />
+              </td>
+            ) : null}
+            {kid && token ? (
+              <td>
+                <span onClick={() => this.clearKid(kid)}>Clear</span>
+              </td>
+            ) : null}
+          </tr>
+        </tbody>
+      </table>
     );
   }
 }

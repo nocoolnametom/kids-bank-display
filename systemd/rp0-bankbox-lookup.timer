@@ -1,0 +1,15 @@
+[Unit]
+Description=RP0-Bankbox Account Lookup Timer
+PartOf=rp0-bankbox.service
+After=rp0-bankbox.service
+
+[Timer]
+# Hourly, but not exactly on the hour (we don't need that specificity)
+# OnCalendar=*-*-* *:00:00
+OnCalendar=*:0/5
+RandomizedDelaySec=5m
+Unit=rp0-bankbox-lookup.service
+
+[Install]
+# This unit should start when rp0-bankbox.service is starting
+WantedBy=rp0-bankbox.service

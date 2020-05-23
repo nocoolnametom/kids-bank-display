@@ -1,0 +1,13 @@
+[Unit]
+Description=RP0-Bankbox Image Making Timer
+PartOf=rp0-bankbox.service
+After=rp0-bankbox.service
+
+[Timer]
+# Every five minutes
+OnCalendar=*:0/5
+Unit=rp0-bankbox-imaging-display.service
+
+[Install]
+# This unit should start when rp0-bankbox.service is starting
+WantedBy=rp0-bankbox.service

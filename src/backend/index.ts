@@ -19,7 +19,7 @@ const PLAID_PUBLIC_KEY = envvar.string("PLAID_PUBLIC_KEY");
 const PLAID_ENV = envvar.string("PLAID_ENV", "sandbox");
 const PLAID_PRODUCTS = envvar.string("PLAID_PRODUCTS", "transactions");
 const PLAID_COUNTRY_CODES = envvar.string("PLAID_COUNTRY_CODES", "US");
-const TOKEN_DB_NAME = envvar.string("TOKEN_DB_NAME", "kid_tokens.db");
+const TOKEN_DB_NAME = envvar.string("TOKEN_DB_NAME", `${__dirname}/../../kid_tokens.db`);
 
 const APP_NAME = 'RP0-BankBox';
 
@@ -53,7 +53,7 @@ const scripts: { [target: string]: string } = {
 };
 
 const app = express();
-app.use(express.static("public"));
+app.use(express.static(__dirname + "../../public"));
 app.use("/js", express.static(__dirname + "/../../dest/frontend/"));
 Object.keys(scripts).forEach((target) => {
   app.use(
@@ -62,6 +62,7 @@ Object.keys(scripts).forEach((target) => {
   );
 });
 app.set("view engine", "ejs");
+app.set('views', __dirname + '/../../views');
 app.use(
   bodyParser.urlencoded({
     extended: false,
@@ -100,5 +101,5 @@ app.post(
 );
 
 app.listen(APP_PORT, () => {
-  console.log("${APP_NAME} server listening on port " + APP_PORT);
+  console.log(`${APP_NAME} server listening on port ${APP_PORT}`);
 });

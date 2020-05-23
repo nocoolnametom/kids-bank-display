@@ -1,0 +1,17 @@
+# This is a dummy service for starting and stopping the whole system at once
+[Unit]
+Description=RP0-Bankbox Master Service
+PartOf=rp0-bankbox.service
+After=rp0-bankbox.service
+
+[Service]
+# The dummy program will exit
+Type=oneshot
+# Execute a dummy program
+ExecStart=/nix/store/4g10055px5r43q10i32sr68ylzab2y1s-coreutils-8.31/bin/true
+# This service shall be considered active after start
+RemainAfterExit=yes
+
+[Install]
+# Components of this application should be started at boot time
+WantedBy=multi-user.target

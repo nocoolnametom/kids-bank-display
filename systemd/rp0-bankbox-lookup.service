@@ -1,0 +1,9 @@
+[Unit]
+Description=RP0-Bankbox Account Lookup
+PartOf=rp0-bankbox.service
+After=rp0-bankbox.service
+
+[Service]
+EnvironmentFile=/opt/rp0-bankbox/environment
+ExecStart=/usr/local/bin/node /opt/rp0-bankbox/dest/lookup/index.js
+Type=oneshot

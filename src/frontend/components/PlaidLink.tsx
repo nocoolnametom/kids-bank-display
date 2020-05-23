@@ -61,7 +61,7 @@ export const PlaidLink = ({
 
   return !error ? (
     <button onClick={() => open()} disabled={!ready}>
-      Connect a bank account
+      {token ? 'Reconnect' : 'Connect a'} bank account
     </button>
   ) : (
     <div>

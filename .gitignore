@@ -1,6 +1,10 @@
 # Installed modules
 node_modules
 
+# Configuration Environment File
+/environment
+/environment.vars
+
 # Built JS Files
 dest
 

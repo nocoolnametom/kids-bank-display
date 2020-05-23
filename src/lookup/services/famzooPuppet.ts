@@ -65,7 +65,7 @@ export const famzooPuppet: (
   try {
     const launchOptions: LaunchOptions = {};
 
-    if (isNixos) {
+    if (isNixos || chromiumPath) {
       launchOptions.executablePath = chromiumPath;
     }
 
