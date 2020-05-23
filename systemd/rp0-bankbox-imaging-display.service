@@ -6,5 +6,6 @@ After=rp0-bankbox.service
 [Service]
 EnvironmentFile=/opt/rp0-bankbox/environment
 ExecStart=/usr/local/bin/node /opt/rp0-bankbox/dest/imaging/index.js
-ExecStart=/nix/store/4g10055px5r43q10i32sr68ylzab2y1s-coreutils-8.31/bin/echo "2" "$PLAID_PUBLIC_KEY" >> /home/tdoggett/rp0-bankbox-display-out
+ExecStart=/usr/bin/convert ${IMAGE_OUTPUT} /tmp/rp0-bankbox-display.bmp
+ExecStart=/opt/rp0-bankbox/python/load-display.py
 Type=oneshot
