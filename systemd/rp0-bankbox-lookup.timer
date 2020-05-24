@@ -5,8 +5,7 @@ After=rp0-bankbox.service
 
 [Timer]
 # Hourly, but not exactly on the hour (we don't need that specificity)
-# OnCalendar=*-*-* *:00:00
-OnCalendar=*:0/5
+OnCalendar=*-*-* *:00:00
 RandomizedDelaySec=5m
 Unit=rp0-bankbox-lookup.service
 
