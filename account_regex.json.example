@@ -3,5 +3,8 @@
   " \\(SPENDING\\)$": "",
   "\\[\\*\\*\\*3321\\]": "Mom Card",
   "\\[\\*\\*\\*3305\\]": "Dad Card",
-  "^Plaid ": ""
+  "^Plaid ": "",
+  "FREE CHECKING": "Checking",
+  "MONEY MARKET SELECT": "MM",
+  "SAVINGS": "Savings"
 }
