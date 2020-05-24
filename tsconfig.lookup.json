@@ -7,6 +7,9 @@
     "rootDir": "./src/lookup",
     "outDir": "./dest/lookup"
   },
+  "files": [
+    "./src/lookup/index.ts"
+  ],
   "exclude": [
     "./src/backend",
     "./src/frontend",

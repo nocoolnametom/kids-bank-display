@@ -1,9 +1,11 @@
 import type { ClientOptions } from "plaid";
+import type { LaunchOptions } from 'puppeteer';
 import envvar from "envvar";
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import { Client, environments } from "plaid";
 import { DB } from "./Database";
 import { LookupService } from "./services/LookupService";
+import puppeteer from 'puppeteer';
 
 const PLAID_CLIENT_ID = envvar.string("PLAID_CLIENT_ID");
 const PLAID_SECRET = envvar.string("PLAID_SECRET");
@@ -17,6 +19,11 @@ const FZ_PASS = envvar.string("FZ_PASS", "<famzooPassword>");
 const TOKEN_DB_NAME = envvar.string("TOKEN_DB_NAME", `${__dirname}/../../kid_tokens.db`);
 
 const APP_NAME = 'RP0-BankBox';
+
+const launchOptions: LaunchOptions = {
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  headless: true
+};
 
 if (existsSync(__dirname + "/../../kids_accounts.json")) {
   try {
@@ -34,17 +41,22 @@ if (existsSync(__dirname + "/../../kids_accounts.json")) {
         clientApp: APP_NAME,
       } as any) as ClientOptions
     );
-    LookupService(
-      db,
-      client,
-      !!IS_NIXOS,
-      CHROMIUM,
-      FZ_FAM,
-      FZ_MEM,
-      FZ_PASS
-    )(kids).then((data) =>
-      writeFileSync(__dirname + "/../../results.json", JSON.stringify(data), { encoding: "utf8" })
-    );
+    if (!!IS_NIXOS || CHROMIUM) {
+      launchOptions.executablePath = CHROMIUM;
+    }
+
+    puppeteer.launch(launchOptions).then(async (browser) => {
+      const data = await LookupService(
+        db,
+        client,
+        browser,
+        FZ_FAM,
+        FZ_MEM,
+        FZ_PASS
+      )(kids);
+        writeFileSync(__dirname + "/../../results.json", JSON.stringify(data), { encoding: "utf8" });
+        await browser.close();
+    });
   } catch (err) {
     console.error(err);
   }

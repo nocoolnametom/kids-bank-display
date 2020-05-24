@@ -6,8 +6,8 @@
   "scripts": {
     "debug": "DEBUG=express:* npm start",
     "build": "rm -Rf dest && tsc -b tsconfig.frontend.json && tsc -b tsconfig.backend.json && tsc -b tsconfig.lookup.json && tsc -b tsconfig.imaging.json",
-    "start": "npm run build && . ./environment && ts-node src/backend/index.ts",
-    "lookup": ". ./environment && ts-node src/lookup/index.ts",
+    "start": "npm run build && . ./environment.vars && ts-node src/backend/index.ts",
+    "lookup": ". ./environment.vars && ts-node src/lookup/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nocoolnametom@gmail.com",

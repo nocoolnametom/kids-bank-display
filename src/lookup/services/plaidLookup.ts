@@ -46,7 +46,7 @@ export const plaidLookup: (
       ({name: accountName, balances, account_id}) =>
         ({
           name: accountName,
-          credit: Math.round((balances.available || 0) / 100),
+          credit: Math.round(balances.available || 0),  // Transactions are in cents, but balances are in dollars!
           recentTransaction: getRecentTransaction(account_id, transactions),
         } as Account)
     );

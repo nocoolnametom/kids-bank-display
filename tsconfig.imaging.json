@@ -7,6 +7,9 @@
     "rootDir": "./src/imaging",
     "outDir": "./dest/imaging"
   },
+  "files": [
+    "./src/imaging/index.ts"
+  ],
   "exclude": [
     "./src/backend",
     "./src/frontend",

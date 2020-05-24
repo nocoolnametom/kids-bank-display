@@ -1,16 +1,16 @@
 import type { Account } from "../interfaces/Account";
 import type { KidsAccountsJson } from "../interfaces/KidsAccountsJson";
+import type { DB } from "../Database";
+import type { Client } from "plaid";
+import type { Browser } from "puppeteer";
 import { accountTypes } from "../constants/accountTypes";
 import { famzooPuppet } from "./famzooPuppet";
 import { plaidLookup } from "./plaidLookup";
-import { DB } from "../Database";
-import { Client } from "plaid";
 
 export function LookupService(
   db: DB,
   client: Client,
-  isNixos: boolean,
-  chromiumPath: string,
+  browser: Browser,
   famzooFamily: string,
   famzooMember: string,
   famzooPassword: string
@@ -37,30 +37,55 @@ export function LookupService(
           (kid) => kids[kid].indexOf(account) !== -1
         );
 
-        for (const kid of accountNames) {
+        async function doLookup(
+          kid: string,
+          iterations: number = 3
+        ): Promise<Account[]> {
+          if (iterations <= 0) {
+            console.error(`Full failure ${kid} ${account}`);
+            return [];
+          }
           try {
             switch (account) {
               case accountTypes.FamZoo:
-                kidAccounts[kid] = await famzooPuppet(
-                  isNixos,
-                  chromiumPath,
-                  famzooFamily,
-                  famzooMember,
-                  famzooPassword,
-                  kid
-                );
-                break;
+                const context = await browser.createIncognitoBrowserContext();
+                const page = await context.newPage();
+                const fiveMinutes = 1000 * 60 * 5; // 5 Minutes for a SLOOOOOW Raspberry Pi Zero W
+                page.setDefaultNavigationTimeout(fiveMinutes);
+                page.setDefaultTimeout(fiveMinutes);
+                try {
+                  const result = await famzooPuppet(
+                    page,
+                    famzooFamily,
+                    famzooMember,
+                    famzooPassword,
+                    kid
+                  );
+                  await page.close();
+                  await context.close();
+                  return result;
+                } catch (err) {
+                  page.close();
+                  context.close();
+                  throw err;
+                }
               case accountTypes.Plaid:
-                kidAccounts[kid] = await plaidLookup(db, client, kid);
-                break;
+                return await plaidLookup(db, client, kid);
               default:
-                break;
+                return [];
             }
           } catch (err) {
-            console.error(err);
-            kidAccounts[kid] = [];
+            return await doLookup(kid, iterations - 1);
           }
         }
+
+        const kidResults = await Promise.all(
+          accountNames.map((kid) => doLookup(kid))
+        );
+
+        accountNames.forEach((kid, index) => {
+          kidAccounts[kid] = kidResults[index];
+        });
 
         return kidAccounts;
       })

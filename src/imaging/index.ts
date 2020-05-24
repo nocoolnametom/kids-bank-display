@@ -10,7 +10,8 @@ const IMAGE_OUTPUT = envvar.string('IMAGE_OUTPUT', `${__dirname}/../../mockup.pn
 
 (async (isNixos: boolean, chromiumPath: string, dashboardUrl: string, imageOutput: string) => {
   const puppeteerOptions: LaunchOptions = {
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: true,
   };
   if (isNixos || chromiumPath) {
     puppeteerOptions.executablePath = chromiumPath;

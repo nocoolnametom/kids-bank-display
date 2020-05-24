@@ -1,6 +1,5 @@
 import type { Account } from "../interfaces/Account";
-import type { LaunchOptions } from "puppeteer";
-import puppeteer from "puppeteer";
+import type { Page } from "puppeteer";
 
 const inBrowserFunc = (accountName: string) => {
   const accounts: Account[] = [];
@@ -55,58 +54,47 @@ const inBrowserFunc = (accountName: string) => {
 };
 
 export const famzooPuppet: (
-  isNixos: boolean,
-  chromiumPath: string,
+  page: Page,
   famzooFamily: string,
   famzooMember: string,
   famzooPassword: string,
   kidName: string
-) => Promise<Account[]> = async (isNixos, chromiumPath, famzooFamily, famzooMember, famzooPassword, kidName) => {
-  try {
-    const launchOptions: LaunchOptions = {};
+) => Promise<Account[]> = async (
+  page,
+  famzooFamily,
+  famzooMember,
+  famzooPassword,
+  kidName
+) => {
+  await page.goto("https://app.famzoo.com/ords/f?p=197:101:0:", {
+    waitUntil: "networkidle2",
+  });
 
-    if (isNixos || chromiumPath) {
-      launchOptions.executablePath = chromiumPath;
-    }
+  await page.waitForSelector('[name="famname"]');
+  await page.waitForSelector('[name="memname"]');
+  await page.waitForSelector('[name="password"]');
 
-    const browser = await puppeteer.launch(launchOptions);
+  await page.type("#fzi_signin_famname", famzooFamily);
+  await page.type("#fzi_signin_memname", famzooMember);
+  await page.type("#fzi_signin_password", famzooPassword);
 
-    const page = await browser.newPage();
-    await page.goto("https://app.famzoo.com/ords/f?p=197:101:0:", {
-      waitUntil: "networkidle2",
-    });
+  await page.click("#fzi_signin_bsignin");
 
-    await page.waitForSelector('[name="famname"]');
-    await page.waitForSelector('[name="memname"]');
-    await page.waitForSelector('[name="password"]');
+  await page.waitForSelector("#fztabmyfzbank");
 
-    await page.type("#fzi_signin_famname", famzooFamily);
-    await page.type("#fzi_signin_memname", famzooMember);
-    await page.type("#fzi_signin_password", famzooPassword);
+  await page.waitFor(
+    (selector) => !document.querySelector(selector),
+    {},
+    "#portletprogresscontent1.busy"
+  );
 
-    await page.click("#fzi_signin_bsignin");
+  await page.click("#fztabmyfzbank");
 
-    await page.waitForSelector("#fztabmyfzbank");
+  await page.waitForSelector("#fztblaccts");
 
-    await page.waitFor(
-      (selector) => !document.querySelector(selector),
-      {},
-      "#portletprogresscontent1.busy"
-    );
+  const accounts = (
+    await page.evaluate(inBrowserFunc, kidName.toLowerCase())
+  ).filter((acc) => acc.name && acc.credit);
 
-    await page.click("#fztabmyfzbank");
-
-    await page.waitForSelector("#fztblaccts");
-
-    const accounts = (
-      await page.evaluate(inBrowserFunc, kidName.toLowerCase())
-    ).filter((acc) => acc.name && acc.credit);
-
-    await browser.close();
-
-    return accounts;
-  } catch (err) {
-    console.error(kidName, err);
-    return [];
-  }
+  return accounts;
 };

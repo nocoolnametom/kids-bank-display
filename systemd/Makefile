@@ -22,6 +22,7 @@ clean:
 
 install: /opt/rp0-bankbox/dest
 	sudo cp /opt/rp0-bankbox/systemd/*.service /etc/systemd/system/
+	sudo cp /opt/rp0-bankbox/systemd/*.timer /etc/systemd/system/
 	sudo systemctl daemon-reload
 	sudo systemctl enable rp0-bankbox*
 	echo "Run `sudo systemctl start rp0-bankbox` to start"
