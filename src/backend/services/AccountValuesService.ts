@@ -56,7 +56,7 @@ export function addNiceDateToTransaction(
     ...transaction,
     date: `${shortMonths[new Date(transaction.date).getMonth()]} ${new Date(
       transaction.date
-    ).getDay()}`,
+    ).getDate()}`,
   };
 }
 

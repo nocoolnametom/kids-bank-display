@@ -14,7 +14,7 @@ export function getRecentTransaction(
         account_id === accountId && amount && amount > 0
     )
     .map(({ name: transactionName, amount, date }) => ({
-      amount: 0 - Math.round(amount || 0 / 100),
+      amount: 0 - (amount || 0),
       name: transactionName || "",
       date: date || "",
     }))
@@ -46,7 +46,7 @@ export const plaidLookup: (
       ({name: accountName, balances, account_id}) =>
         ({
           name: accountName,
-          credit: Math.round(balances.available || 0),  // Transactions are in cents, but balances are in dollars!
+          credit: balances.available || 0,  // Transactions are in cents, but balances are in dollars!
           recentTransaction: getRecentTransaction(account_id, transactions),
         } as Account)
     );
